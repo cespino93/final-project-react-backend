@@ -7,3 +7,8 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 User.create(name: "Chris", username: "cespino", password: "password")
+
+miami = Location.create(city: "Miami", state: "Flordia", country: "USA")
+kanye = maimi.celebrities.create(name: "Kanye West", description: "Listening Session for New Album")
+chris = User.first
+chris.events.create
