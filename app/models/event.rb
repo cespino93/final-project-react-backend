@@ -1,7 +1,7 @@
 class Event < ApplicationRecord
     belongs_to :user
-    has_many :attended
-    has_many :celebrities, through: :attended
+    has_many :attends
+    has_many :celebrities, through: :attends
     has_many :locations, through: :celebrities
 
 end
