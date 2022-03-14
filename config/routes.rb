@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  
+  post "/api/v1/login", to: "api/v1/sessions#create"
   # I want my api to be example.com/api/v1/resource
   namespace :api do
     namespace :v1 do
