@@ -7,4 +7,7 @@ class User < ApplicationRecord
     has_many :celebrities, through: :events
     has_many :locations, through: :events
     has_many :comments
+
+    validates :name, :username, :hometown, presence: true
+    validates :username, uniqueness: true
 end

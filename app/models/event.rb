@@ -4,4 +4,6 @@ class Event < ApplicationRecord
     has_many :celebrities, through: :attends
     has_many :locations, through: :celebrities
 
-end
+    validates :name, :user, presence: true
+
+end 

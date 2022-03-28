@@ -3,10 +3,16 @@ class Api::V1::EventsController < ApplicationController
 
   # GET /events
   def index
-    @events = Event.all
-
-    render json: @events
+    if logged_in?
+    @events = current_user.events
+    
+    render json: EventSerializer.new(@events)
+    else
+      render json: {
+        error: "You must be logged in to see trips"
+      }
   end
+end
 
   # GET /events/1
   def show
@@ -15,27 +21,40 @@ class Api::V1::EventsController < ApplicationController
 
   # POST /events
   def create
-    @event = Event.new(event_params)
+    @event =  current_user.events.build(event_params)
 
     if @event.save
-      render json: @event, status: :created, location: @event
+      render json: EventSerializer.new(@event), status: :created
     else
-      render json: @event.errors, status: :unprocessable_entity
+      error_resp = {
+        error: @event.errors.full_messages.to_sentence
+      }
+      render json: error_resp, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /events/1
   def update
     if @event.update(event_params)
-      render json: @event
+      render json: EventSerializer.new(@event), status: :ok
     else
-      render json: @event.errors, status: :unprocessable_entity
+      error_resp = {
+      error: @event.errors.full_messages.to_sentence
+      }
+      render json: error_resp, status: :unprocessable_entity
     end
   end
 
   # DELETE /events/1
   def destroy
-    @event.destroy
+    if @event.destroy
+      render json: { data: "Event destroyed" }, status: :ok
+    else
+      error_resp = {
+        error: "Events not found and not destroyed"
+      }
+      render json: error_resp, status: :unprocessable_entity
+    end
   end
 
   private
@@ -46,6 +65,6 @@ class Api::V1::EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:start_date, :end_date, :location_id, :user_id)
+      params.require(:event).permit(:start_date, :end_date, :name )
     end
 end
